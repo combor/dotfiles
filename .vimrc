@@ -1,7 +1,3 @@
-"""""""""""""""""""
-" Custom Settings "
-"""""""""""""""""""
-
 " Enable dark backround support
 set background=dark
 
@@ -33,14 +29,15 @@ let Tex_FoldedMisc=""
 
 " Source Code Indentation for python extensions
 set cindent
-set shiftwidth=2
+set shiftwidth=4
 set expandtab
 set spelllang=en
-set tabstop=2
+set tabstop=4
 
 au FileType py set autoindent
 au FileType py set smartindent
 au FileType c set autoindent
 au FileType c set smartindent
-let g:indentLine_char = '│'
-let g:indentLine_color_term = 000
+
+
+execute pathogen#infect()
