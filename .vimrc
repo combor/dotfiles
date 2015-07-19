@@ -41,3 +41,5 @@ au FileType c set smartindent
 
 
 execute pathogen#infect()
+
+let g:go_fmt_command = "goimports"
