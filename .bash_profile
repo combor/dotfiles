@@ -1,21 +1,32 @@
-set -x 
-export GITAWAREPROMPT=~/.bash/git-aware-prompt
-# shellcheck source=/dev/null
-source $GITAWAREPROMPT/main.sh
 alias tmux="TERM=screen-256color-bce tmux"
 export VISUAL=vim
-export GOPATH=$HOME/go
+export GOPATH=/go
 export PATH=$PATH:/usr/local/opt/go/libexec/bin:$GOPATH/bin
 stty -ixon
 
 for i in ~/.*-pass; do
-    # shellcheck source=/dev/null
     [ -e "${i}"/.load.bash ] && . "${i}"/.load.bash
 done
 
-# shellcheck source=/dev/null
-source ~/.git-completion.bash
-export PS1="\u@\h \w \[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\$ "
+for i in /usr/local/etc/bash_completion.d/*; do 
+    . "${i}"
+done
+
+GIT_PS1_SHOWDIRTYSTATE=true
+GIT_PS1_SHOWSTASHSTATE=true
+GIT_PS1_SHOWUNTRACKEDFILES=true
+MAGENTA="\[\033[0;35m\]"
+YELLOW="\[\033[0;33m\]"
+BLUE="\[\033[34m\]"
+LIGHT_GRAY="\[\033[0;37m\]"
+CYAN="\[\033[0;36m\]"
+GREEN="\[\033[0;32m\]"
+
+export LS_OPTIONS='--color=auto'
+export CLICOLOR='Yes'
+export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+
+PS1="\[$GREEN\]\t-\[$YELLOW\]pk@mac\[$LIGHT_GRAY\]\w\[\033[m\]\[$MAGENTA\]\$(__git_ps1)\[$LIGHT_GRAY\]\$ "
 
 GPG_AGENT=$(which gpg-agent)
 
