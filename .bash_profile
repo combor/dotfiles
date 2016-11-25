@@ -15,18 +15,24 @@ done
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWSTASHSTATE=true
 GIT_PS1_SHOWUNTRACKEDFILES=true
-MAGENTA="\[\033[0;35m\]"
-YELLOW="\[\033[0;33m\]"
-BLUE="\[\033[34m\]"
-LIGHT_GRAY="\[\033[0;37m\]"
-CYAN="\[\033[0;36m\]"
-GREEN="\[\033[0;32m\]"
 
-export LS_OPTIONS='--color=auto'
-export CLICOLOR='Yes'
-export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+BLACK=$(tput setaf 0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+LIME_YELLOW=$(tput setaf 190)
+POWDER_BLUE=$(tput setaf 153)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+WHITE=$(tput setaf 7)
+BRIGHT=$(tput bold)
+NORMAL=$(tput sgr0)
+BLINK=$(tput blink)
+REVERSE=$(tput smso)
+UNDERLINE=$(tput smul)
 
-PS1="\[$GREEN\]\t-\[$YELLOW\]pk@mac\[$LIGHT_GRAY\]\w\[\033[m\]\[$MAGENTA\]\$(__git_ps1)\[$LIGHT_GRAY\]\$ "
+PS1="\[$GREEN\]\t-\[$YELLOW\]pk@\H\[$NORMAL\]\w\[\033[m\]\[$MAGENTA\]\$(__git_ps1)\[$NORMAL\]\$ "
 
 GPG_AGENT=$(which gpg-agent)
 
@@ -48,5 +54,12 @@ eval "$(thefuck --alias)"
 eval "$(fasd --init auto)"
 
 function git_diff() {
-  git diff --no-ext-diff -w "$@" | vim -u ~/.vimrc.go -R –
+  git diff --no-ext-diff -w "$@" | vim -R –
 }
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+#Enable virtualenv
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
