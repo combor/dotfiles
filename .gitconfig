@@ -1,6 +1,6 @@
 [user]
 	name = Piotr Komborski
-	email = piotr.komborski@springer.com
+	email = piotr.komborski@gmail.com
 [push]
   default = simple
 [alias]
@@ -11,3 +11,5 @@
         diff = auto
         interactive = auto
         status = auto
+[commit]
+	gpgsign = true
