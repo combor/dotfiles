@@ -26,7 +26,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! unite#sources#neosnippet#define() abort "{{{
+function! unite#sources#neosnippet#define() "{{{
   let kind = {
         \ 'name' : 'neosnippet',
         \ 'default_action' : 'expand',
@@ -46,14 +46,14 @@ let s:source = {
       \ 'action_table' : {},
       \ }
 
-function! s:source.hooks.on_init(args, context) abort "{{{
+function! s:source.hooks.on_init(args, context) "{{{
   let a:context.source__cur_keyword_pos =
         \ s:get_keyword_pos(neosnippet#util#get_cur_text())
   let a:context.source__snippets =
         \ sort(values(neosnippet#helpers#get_completion_snippets()))
 endfunction"}}}
 
-function! s:source.gather_candidates(args, context) abort "{{{
+function! s:source.gather_candidates(args, context) "{{{
   return map(copy(a:context.source__snippets), "{
         \   'word' : v:val.word,
         \   'abbr' : printf('%-50s %s', v:val.word, v:val.menu_abbr),
@@ -74,7 +74,7 @@ let s:action_table = {}
 let s:action_table.expand = {
       \ 'description' : 'expand snippet',
       \ }
-function! s:action_table.expand.func(candidate) abort "{{{
+function! s:action_table.expand.func(candidate) "{{{
   let cur_text = neosnippet#util#get_cur_text()
   let cur_keyword_str = matchstr(cur_text, '\S\+$')
   let context = unite#get_context()
@@ -88,7 +88,7 @@ let s:action_table.preview = {
       \ 'is_selectable' : 1,
       \ 'is_quit' : 0,
       \ }
-function! s:action_table.preview.func(candidates) abort "{{{
+function! s:action_table.preview.func(candidates) "{{{
   for snip in a:candidates
     echohl String
     echo snip.action__complete_word
@@ -102,7 +102,7 @@ let s:action_table.unite__new_candidate = {
       \ 'description' : 'add new snippet',
       \ 'is_quit' : 1,
       \ }
-function! s:action_table.unite__new_candidate.func(candidate) abort "{{{
+function! s:action_table.unite__new_candidate.func(candidate) "{{{
   let trigger = unite#util#input('Please input snippet trigger: ')
   if trigger == ''
     echo 'Canceled.'
@@ -136,7 +136,7 @@ let s:source.action_table = s:action_table
 unlet! s:action_table
 "}}}
 
-function! unite#sources#neosnippet#start_complete() abort "{{{
+function! unite#sources#neosnippet#start_complete() "{{{
   if !exists(':Unite')
     call neosnippet#util#print_error(
           \ 'unite.vim is not installed.')
@@ -149,7 +149,7 @@ function! unite#sources#neosnippet#start_complete() abort "{{{
         \ { 'input': neosnippet#util#get_cur_text(), 'buffer_name' : '' })
 endfunction "}}}
 
-function! s:get_keyword_pos(cur_text) abort "{{{
+function! s:get_keyword_pos(cur_text) "{{{
   let cur_keyword_pos = match(a:cur_text, '\S\+$')
   if cur_keyword_pos < 0
     " Empty string.

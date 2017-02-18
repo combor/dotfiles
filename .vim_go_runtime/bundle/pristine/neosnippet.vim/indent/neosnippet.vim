@@ -40,7 +40,7 @@ endif
 
 setlocal indentexpr=SnippetsIndent()
 
-function! SnippetsIndent() abort "{{{
+function! SnippetsIndent() "{{{
     let line = getline('.')
     let prev_line = (line('.') == 1)? '' : getline(line('.')-1)
     let syntax = '\%(include\|snippet\|abbr\|prev_word\|delete\|alias\|options\|regexp\)'

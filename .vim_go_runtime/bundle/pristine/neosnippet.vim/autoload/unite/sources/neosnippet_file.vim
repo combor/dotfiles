@@ -26,7 +26,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! unite#sources#neosnippet_file#define() abort "{{{
+function! unite#sources#neosnippet_file#define() "{{{
   return [s:source_user, s:source_runtime]
 endfunction "}}}
 
@@ -37,7 +37,7 @@ let s:action_table.neosnippet_source = {
       \ 'is_selectable' : 1,
       \ 'is_quit' : 1,
       \ }
-function! s:action_table.neosnippet_source.func(candidates) abort "{{{
+function! s:action_table.neosnippet_source.func(candidates) "{{{
   for candidate in a:candidates
     let snippet_name = candidate.action__path
     if snippet_name != ''
@@ -52,7 +52,7 @@ let s:source_user = {
       \ 'description' : 'neosnippet user file',
       \ 'action_table' : copy(s:action_table),
       \ }
-function! s:source_user.gather_candidates(args, context) abort "{{{
+function! s:source_user.gather_candidates(args, context) "{{{
   return s:get_snippet_candidates(
         \ neosnippet#get_user_snippets_directory())
 endfunction "}}}
@@ -62,7 +62,7 @@ let s:source_user.action_table.unite__new_candidate = {
       \ 'is_invalidate_cache' : 1,
       \ 'is_quit' : 1,
       \ }
-function! s:source_user.action_table.unite__new_candidate.func(candidate) abort "{{{
+function! s:source_user.action_table.unite__new_candidate.func(candidate) "{{{
   let filename = input(
         \ 'New snippet file name: ', neosnippet#helpers#get_filetype())
   if filename != ''
@@ -77,7 +77,7 @@ let s:source_runtime = {
       \ 'description' : 'neosnippet runtime file',
       \ 'action_table' : copy(s:action_table),
       \ }
-function! s:source_runtime.gather_candidates(args, context) abort "{{{
+function! s:source_runtime.gather_candidates(args, context) "{{{
   return s:get_snippet_candidates(
         \ neosnippet#get_runtime_snippets_directory())
 endfunction "}}}
@@ -87,7 +87,7 @@ let s:source_runtime.action_table.unite__new_candidate = {
       \ 'is_invalidate_cache' : 1,
       \ 'is_quit' : 1,
       \ }
-function! s:source_runtime.action_table.unite__new_candidate.func(candidate) abort "{{{
+function! s:source_runtime.action_table.unite__new_candidate.func(candidate) "{{{
   let filename = input(
         \ 'New snippet file name: ', neosnippet#helpers#get_filetype())
   if filename != ''
@@ -96,7 +96,7 @@ function! s:source_runtime.action_table.unite__new_candidate.func(candidate) abo
 endfunction"}}}
 
 
-function! s:get_snippet_candidates(dirs) abort "{{{
+function! s:get_snippet_candidates(dirs) "{{{
   let _ = []
   for directory in a:dirs
     let _ += map(split(unite#util#substitute_path_separator(

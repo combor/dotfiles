@@ -31,12 +31,12 @@ function! SyntaxCheckers_haskell_hdevtools_GetLocList() dict
 
     let errorformat =
         \ '%-Z %#,'.
-        \ '%W%\m%f:%l:%v%\%%(-%\d%\+%\)%\=: Warning: %m,'.
-        \ '%W%\m%f:%l:%v%\%%(-%\d%\+%\)%\=: Warning:,'.
-        \ '%E%\m%f:%l:%v%\%%(-%\d%\+%\)%\=: %m,'.
-        \ '%E%>%\m%f:%l:%v%\%%(-%\d%\+%\)%\=:,'.
+        \ '%W%f:%l:%v: Warning: %m,'.
+        \ '%W%f:%l:%v: Warning:,'.
+        \ '%E%f:%l:%v: %m,'.
+        \ '%E%>%f:%l:%v:,'.
         \ '%+C  %#%m,'.
-        \ '%W%>%\m%f:%l:%v%\%%(-%\d%\+%\)%\=:,'.
+        \ '%W%>%f:%l:%v:,'.
         \ '%+C  %#%tarning: %m,'
 
     return SyntasticMake({

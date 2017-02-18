@@ -1,40 +1,27 @@
 let s:file = ''
 let s:using_xolox_shell = -1
 let s:exit_code = 0
+let s:fish = &shell =~# 'fish'
 
-function! gitgutter#utility#warn(message) abort
+function! gitgutter#utility#warn(message)
   echohl WarningMsg
   echo 'vim-gitgutter: ' . a:message
   echohl None
   let v:warningmsg = a:message
 endfunction
 
-function! gitgutter#utility#warn_once(message, key) abort
-  if empty(getbufvar(s:bufnr, a:key))
-    call setbufvar(s:bufnr, a:key, '1')
-    echohl WarningMsg
-    redraw | echo 'vim-gitgutter: ' . a:message
-    echohl None
-    let v:warningmsg = a:message
-  endif
-endfunction
-
 " Returns truthy when the buffer's file should be processed; and falsey when it shouldn't.
 " This function does not and should not make any system calls.
-function! gitgutter#utility#is_active() abort
-  return g:gitgutter_enabled &&
-        \ !pumvisible() &&
-        \ gitgutter#utility#is_file_buffer() &&
-        \ gitgutter#utility#exists_file() &&
-        \ gitgutter#utility#not_git_dir()
+function! gitgutter#utility#is_active()
+  return g:gitgutter_enabled && gitgutter#utility#exists_file() && gitgutter#utility#not_git_dir() && !gitgutter#utility#help_file()
 endfunction
 
-function! gitgutter#utility#not_git_dir() abort
+function! gitgutter#utility#not_git_dir()
   return gitgutter#utility#full_path_to_directory_of_file() !~ '[/\\]\.git\($\|[/\\]\)'
 endfunction
 
-function! gitgutter#utility#is_file_buffer() abort
-  return empty(getbufvar(s:bufnr, '&buftype'))
+function! gitgutter#utility#help_file()
+  return getbufvar(s:bufnr, '&filetype') ==# 'help' && getbufvar(s:bufnr, '&buftype') ==# 'help'
 endfunction
 
 " A replacement for the built-in `shellescape(arg)`.
@@ -44,7 +31,7 @@ endfunction
 "
 " See:
 " https://github.com/tpope/vim-fugitive/blob/8f0b8edfbd246c0026b7a2388e1d883d579ac7f6/plugin/fugitive.vim#L29-L37
-function! gitgutter#utility#shellescape(arg) abort
+function! gitgutter#utility#shellescape(arg)
   if a:arg =~ '^[A-Za-z0-9_/.-]\+$'
     return a:arg
   elseif &shell =~# 'cmd' || gitgutter#utility#using_xolox_shell()
@@ -54,7 +41,7 @@ function! gitgutter#utility#shellescape(arg) abort
   endif
 endfunction
 
-function! gitgutter#utility#set_buffer(bufnr) abort
+function! gitgutter#utility#set_buffer(bufnr)
   let s:bufnr = a:bufnr
   let s:file = resolve(bufname(a:bufnr))
 endfunction
@@ -67,43 +54,43 @@ function! gitgutter#utility#file()
   return s:file
 endfunction
 
-function! gitgutter#utility#filename() abort
+function! gitgutter#utility#filename()
   return fnamemodify(s:file, ':t')
 endfunction
 
-function! gitgutter#utility#extension() abort
+function! gitgutter#utility#extension()
   return fnamemodify(s:file, ':e')
 endfunction
 
-function! gitgutter#utility#full_path_to_directory_of_file() abort
+function! gitgutter#utility#full_path_to_directory_of_file()
   return fnamemodify(s:file, ':p:h')
 endfunction
 
-function! gitgutter#utility#directory_of_file() abort
+function! gitgutter#utility#directory_of_file()
   return fnamemodify(s:file, ':h')
 endfunction
 
-function! gitgutter#utility#exists_file() abort
+function! gitgutter#utility#exists_file()
   return filereadable(s:file)
 endfunction
 
-function! gitgutter#utility#has_unsaved_changes() abort
+function! gitgutter#utility#has_unsaved_changes()
   return getbufvar(s:bufnr, "&mod")
 endfunction
 
-function! gitgutter#utility#has_fresh_changes() abort
+function! gitgutter#utility#has_fresh_changes()
   return getbufvar(s:bufnr, 'changedtick') != getbufvar(s:bufnr, 'gitgutter_last_tick')
 endfunction
 
-function! gitgutter#utility#save_last_seen_change() abort
+function! gitgutter#utility#save_last_seen_change()
   call setbufvar(s:bufnr, 'gitgutter_last_tick', getbufvar(s:bufnr, 'changedtick'))
 endfunction
 
-function! gitgutter#utility#shell_error() abort
+function! gitgutter#utility#shell_error()
   return gitgutter#utility#using_xolox_shell() ? s:exit_code : v:shell_error
 endfunction
 
-function! gitgutter#utility#using_xolox_shell() abort
+function! gitgutter#utility#using_xolox_shell()
   if s:using_xolox_shell == -1
     if !g:gitgutter_avoid_cmd_prompt_on_windows
       let s:using_xolox_shell = 0
@@ -118,9 +105,7 @@ function! gitgutter#utility#using_xolox_shell() abort
   return s:using_xolox_shell
 endfunction
 
-function! gitgutter#utility#system(cmd, ...) abort
-  call gitgutter#debug#log(a:cmd, a:000)
-
+function! gitgutter#utility#system(cmd, ...)
   if gitgutter#utility#using_xolox_shell()
     let options = {'command': a:cmd, 'check': 0}
     if a:0 > 0
@@ -135,10 +120,10 @@ function! gitgutter#utility#system(cmd, ...) abort
   return output
 endfunction
 
-function! gitgutter#utility#file_relative_to_repo_root() abort
+function! gitgutter#utility#file_relative_to_repo_root()
   let file_path_relative_to_repo_root = getbufvar(s:bufnr, 'gitgutter_repo_relative_path')
   if empty(file_path_relative_to_repo_root)
-    let dir_path_relative_to_repo_root = gitgutter#utility#system(gitgutter#utility#command_in_directory_of_file(g:gitgutter_git_executable.' rev-parse --show-prefix'))
+    let dir_path_relative_to_repo_root = gitgutter#utility#system(gitgutter#utility#command_in_directory_of_file('git rev-parse --show-prefix'))
     let dir_path_relative_to_repo_root = gitgutter#utility#strip_trailing_new_line(dir_path_relative_to_repo_root)
     let file_path_relative_to_repo_root = dir_path_relative_to_repo_root . gitgutter#utility#filename()
     call setbufvar(s:bufnr, 'gitgutter_repo_relative_path', file_path_relative_to_repo_root)
@@ -146,11 +131,11 @@ function! gitgutter#utility#file_relative_to_repo_root() abort
   return file_path_relative_to_repo_root
 endfunction
 
-function! gitgutter#utility#command_in_directory_of_file(cmd) abort
-  return 'cd '.gitgutter#utility#shellescape(gitgutter#utility#directory_of_file()).' && '.a:cmd
+function! gitgutter#utility#command_in_directory_of_file(cmd)
+  return 'cd '.gitgutter#utility#shellescape(gitgutter#utility#directory_of_file()) . (s:fish ? '; and ' : ' && ') . a:cmd
 endfunction
 
-function! gitgutter#utility#highlight_name_for_change(text) abort
+function! gitgutter#utility#highlight_name_for_change(text)
   if a:text ==# 'added'
     return 'GitGutterLineAdded'
   elseif a:text ==# 'removed'
@@ -164,49 +149,6 @@ function! gitgutter#utility#highlight_name_for_change(text) abort
   endif
 endfunction
 
-" Dedups list in-place.
-" Assumes list has no empty entries.
-function! gitgutter#utility#dedup(list)
-  return filter(sort(a:list), 'index(a:list, v:val, v:key + 1) == -1')
-endfunction
-
-function! gitgutter#utility#strip_trailing_new_line(line) abort
+function! gitgutter#utility#strip_trailing_new_line(line)
   return substitute(a:line, '\n$', '', '')
-endfunction
-
-function! gitgutter#utility#git_version() abort
-  return matchstr(system(g:gitgutter_git_executable.' --version'), '[0-9.]\+')
-endfunction
-
-" True for git v1.7.2+.
-function! gitgutter#utility#git_supports_command_line_config_override() abort
-  let [major, minor, patch; _] = split(gitgutter#utility#git_version(), '\.')
-  return major > 1 || (major == 1 && minor > 7) || (minor == 7 && patch > 1)
-endfunction
-
-function! gitgutter#utility#stringify(list) abort
-  return join(a:list, "\n")."\n"
-endfunction
-
-function! gitgutter#utility#use_known_shell() abort
-  if has('unix')
-    if &shell !=# 'sh'
-      let s:shell = &shell
-      let s:shellcmdflag = &shellcmdflag
-      let s:shellredir = &shellredir
-      let &shell = 'sh'
-      set shellcmdflag=-c
-      set shellredir=>%s\ 2>&1
-    endif
-  endif
-endfunction
-
-function! gitgutter#utility#restore_shell() abort
-  if has('unix')
-    if exists('s:shell')
-      let &shell = s:shell
-      let &shellcmdflag = s:shellcmdflag
-      let &shellredir = s:shellredir
-    endif
-  endif
 endfunction

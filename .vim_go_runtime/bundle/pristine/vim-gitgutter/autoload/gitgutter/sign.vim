@@ -11,7 +11,7 @@ let s:supports_star = v:version > 703 || (v:version == 703 && has("patch596"))
 
 
 " Removes gitgutter's signs (excluding dummy sign) from the buffer being processed.
-function! gitgutter#sign#clear_signs() abort
+function! gitgutter#sign#clear_signs()
   let bufnr = gitgutter#utility#bufnr()
   call gitgutter#sign#find_current_signs()
 
@@ -25,7 +25,7 @@ endfunction
 "
 " modified_lines: list of [<line_number (number)>, <name (string)>]
 " where name = 'added|removed|modified|modified_removed'
-function! gitgutter#sign#update_signs(modified_lines) abort
+function! gitgutter#sign#update_signs(modified_lines)
   call gitgutter#sign#find_current_signs()
 
   let new_gitgutter_signs_line_numbers = map(copy(a:modified_lines), 'v:val[0]')
@@ -45,7 +45,7 @@ function! gitgutter#sign#update_signs(modified_lines) abort
 endfunction
 
 
-function! gitgutter#sign#add_dummy_sign() abort
+function! gitgutter#sign#add_dummy_sign()
   let bufnr = gitgutter#utility#bufnr()
   if !getbufvar(bufnr, 'gitgutter_dummy_sign')
     execute "sign place" s:dummy_sign_id "line=" . 9999 "name=GitGutterDummy buffer=" . bufnr
@@ -53,7 +53,7 @@ function! gitgutter#sign#add_dummy_sign() abort
   endif
 endfunction
 
-function! gitgutter#sign#remove_dummy_sign(force) abort
+function! gitgutter#sign#remove_dummy_sign(force)
   let bufnr = gitgutter#utility#bufnr()
   if getbufvar(bufnr, 'gitgutter_dummy_sign') && (a:force || !g:gitgutter_sign_column_always)
     execute "sign unplace" s:dummy_sign_id "buffer=" . bufnr
@@ -67,7 +67,7 @@ endfunction
 "
 
 
-function! gitgutter#sign#find_current_signs() abort
+function! gitgutter#sign#find_current_signs()
   let bufnr = gitgutter#utility#bufnr()
   let gitgutter_signs = {}  " <line_number (string)>: {'id': <id (number)>, 'name': <name (string)>}
   let other_signs = []      " [<line_number (number),...]
@@ -77,7 +77,7 @@ function! gitgutter#sign#find_current_signs() abort
     silent execute "sign place buffer=" . bufnr
   redir END
 
-  for sign_line in filter(split(signs, '\n')[2:], 'v:val =~# "="')
+  for sign_line in filter(split(signs, '\n'), 'v:val =~# "="')
     " Typical sign line:  line=88 id=1234 name=GitGutterLineAdded
     " We assume splitting is faster than a regexp.
     let components  = split(sign_line)
@@ -109,7 +109,7 @@ endfunction
 
 " Returns a list of [<id (number)>, ...]
 " Sets `s:remove_all_old_signs` as a side-effect.
-function! gitgutter#sign#obsolete_gitgutter_signs_to_remove(new_gitgutter_signs_line_numbers) abort
+function! gitgutter#sign#obsolete_gitgutter_signs_to_remove(new_gitgutter_signs_line_numbers)
   let bufnr = gitgutter#utility#bufnr()
   let signs_to_remove = []  " list of [<id (number)>, ...]
   let remove_all_signs = 1
@@ -126,7 +126,7 @@ function! gitgutter#sign#obsolete_gitgutter_signs_to_remove(new_gitgutter_signs_
 endfunction
 
 
-function! gitgutter#sign#remove_signs(sign_ids, all_signs) abort
+function! gitgutter#sign#remove_signs(sign_ids, all_signs)
   let bufnr = gitgutter#utility#bufnr()
   if a:all_signs && s:supports_star && empty(getbufvar(bufnr, 'gitgutter_other_signs'))
     let dummy_sign_present = getbufvar(bufnr, 'gitgutter_dummy_sign')
@@ -142,7 +142,7 @@ function! gitgutter#sign#remove_signs(sign_ids, all_signs) abort
 endfunction
 
 
-function! gitgutter#sign#upsert_new_gitgutter_signs(modified_lines) abort
+function! gitgutter#sign#upsert_new_gitgutter_signs(modified_lines)
   let bufnr = gitgutter#utility#bufnr()
   let other_signs         = getbufvar(bufnr, 'gitgutter_other_signs')
   let old_gitgutter_signs = getbufvar(bufnr, 'gitgutter_gitgutter_signs')
@@ -166,14 +166,8 @@ function! gitgutter#sign#upsert_new_gitgutter_signs(modified_lines) abort
 endfunction
 
 
-function! gitgutter#sign#next_sign_id() abort
+function! gitgutter#sign#next_sign_id()
   let next_id = s:next_sign_id
   let s:next_sign_id += 1
   return next_id
-endfunction
-
-
-" Only for testing.
-function! gitgutter#sign#reset()
-  let s:next_sign_id  = s:first_sign_id
 endfunction

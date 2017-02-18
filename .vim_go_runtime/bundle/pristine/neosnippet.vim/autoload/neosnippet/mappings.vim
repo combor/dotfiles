@@ -26,38 +26,21 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! neosnippet#mappings#expandable_or_jumpable() abort "{{{
+function! neosnippet#mappings#expandable_or_jumpable() "{{{
   return neosnippet#mappings#expandable() || neosnippet#mappings#jumpable()
 endfunction"}}}
-function! neosnippet#mappings#expandable() abort "{{{
+function! neosnippet#mappings#expandable() "{{{
   " Check snippet trigger.
-  return neosnippet#mappings#completed_expandable()
-        \ || neosnippet#helpers#get_cursor_snippet(
-        \      neosnippet#helpers#get_snippets('i'),
-        \      neosnippet#util#get_cur_text()) != ''
+  return neosnippet#helpers#get_cursor_snippet(
+        \ neosnippet#helpers#get_snippets(), neosnippet#util#get_cur_text()) != ''
 endfunction"}}}
-function! neosnippet#mappings#jumpable() abort "{{{
+function! neosnippet#mappings#jumpable() "{{{
   " Found snippet placeholder.
   return search(neosnippet#get_placeholder_marker_pattern(). '\|'
             \ .neosnippet#get_sync_placeholder_marker_pattern(), 'nw') > 0
 endfunction"}}}
-function! neosnippet#mappings#completed_expandable() abort "{{{
-  if !s:enabled_completed_snippet()
-    return 0
-  endif
 
-  let snippet = neosnippet#parser#_get_completed_snippet(
-        \ v:completed_item, neosnippet#util#get_cur_text(),
-        \ neosnippet#util#get_next_text())
-  return snippet != ''
-endfunction"}}}
-function! s:enabled_completed_snippet() abort "{{{
-  return exists('v:completed_item')
-        \ && !empty(v:completed_item)
-        \ && g:neosnippet#enable_completed_snippet
-endfunction"}}}
-
-function! neosnippet#mappings#_clear_select_mode_mappings() abort "{{{
+function! neosnippet#mappings#_clear_select_mode_mappings() "{{{
   if !g:neosnippet#disable_select_mode_mappings
     return
   endif
@@ -80,7 +63,7 @@ function! neosnippet#mappings#_clear_select_mode_mappings() abort "{{{
   snoremap <C-h>    a<BS>
 endfunction"}}}
 
-function! neosnippet#mappings#_register_oneshot_snippet() abort "{{{
+function! neosnippet#mappings#_register_oneshot_snippet() "{{{
   let trigger = input('Please input snippet trigger: ', 'oneshot')
   if trigger == ''
     return
@@ -108,12 +91,12 @@ function! neosnippet#mappings#_register_oneshot_snippet() abort "{{{
   echo 'Registered trigger : ' . trigger
 endfunction"}}}
 
-function! neosnippet#mappings#_expand_target() abort "{{{
+function! neosnippet#mappings#_expand_target() "{{{
   let trigger = input('Please input snippet trigger: ',
         \ '', 'customlist,neosnippet#commands#_complete_target_snippets')
   let neosnippet = neosnippet#variables#current_neosnippet()
-  if !has_key(neosnippet#helpers#get_snippets('i'), trigger) ||
-        \ neosnippet#helpers#get_snippets('i')[trigger].snip !~#
+  if !has_key(neosnippet#helpers#get_snippets(), trigger) ||
+        \ neosnippet#helpers#get_snippets()[trigger].snip !~#
         \   neosnippet#get_placeholder_target_marker_pattern()
     if trigger != ''
       echo 'The trigger is invalid.'
@@ -125,7 +108,7 @@ function! neosnippet#mappings#_expand_target() abort "{{{
 
   call neosnippet#mappings#_expand_target_trigger(trigger)
 endfunction"}}}
-function! neosnippet#mappings#_expand_target_trigger(trigger) abort "{{{
+function! neosnippet#mappings#_expand_target_trigger(trigger) "{{{
   let neosnippet = neosnippet#variables#current_neosnippet()
   let neosnippet.target = substitute(
         \ neosnippet#helpers#get_selected_text(visualmode(), 1), '\n$', '', '')
@@ -152,79 +135,46 @@ function! neosnippet#mappings#_expand_target_trigger(trigger) abort "{{{
   endif
 endfunction"}}}
 
-function! neosnippet#mappings#_anonymous(snippet) abort "{{{
-  let [cur_text, col, expr] = neosnippet#mappings#_pre_trigger()
-  let expr .= printf("\<ESC>:call neosnippet#view#_insert(%s, {}, %s, %d)\<CR>",
-        \ string(a:snippet), string(cur_text), col)
-
-  return expr
-endfunction"}}}
-function! neosnippet#mappings#_expand(trigger) abort "{{{
-  let [cur_text, col, expr] = neosnippet#mappings#_pre_trigger()
-
-  let expr .= printf("\<ESC>:call neosnippet#view#_expand(%s, %d, %s)\<CR>",
-        \ string(cur_text), col, string(a:trigger))
-
-  return expr
-endfunction"}}}
-
-function! s:snippets_expand(cur_text, col) abort "{{{
-  if s:enabled_completed_snippet()
-    let snippet = neosnippet#parser#_get_completed_snippet(
-          \ v:completed_item, a:cur_text, neosnippet#util#get_next_text())
-    if snippet != ''
-      call neosnippet#view#_insert(snippet, {}, a:cur_text, a:col)
-      return 0
-    endif
-  endif
-
+function! s:snippets_expand(cur_text, col) "{{{
   let cur_word = neosnippet#helpers#get_cursor_snippet(
-        \ neosnippet#helpers#get_snippets('i'),
+        \ neosnippet#helpers#get_snippets(),
         \ a:cur_text)
+
+  call neosnippet#view#_expand(
+        \ a:cur_text, a:col, cur_word)
+endfunction"}}}
+
+function! s:snippets_expand_or_jump(cur_text, col) "{{{
+  let cur_word = neosnippet#helpers#get_cursor_snippet(
+        \ neosnippet#helpers#get_snippets(), a:cur_text)
+
   if cur_word != ''
     " Found snippet trigger.
     call neosnippet#view#_expand(
-          \ neosnippet#util#get_cur_text(), a:col, cur_word)
-    return 0
-  endif
-
-  return 1
-endfunction"}}}
-
-function! s:snippets_expand_or_jump(cur_text, col) abort "{{{
-  if s:snippets_expand(a:cur_text, a:col)
-    call neosnippet#view#_jump('', a:col)
+          \ a:cur_text, a:col, cur_word)
+  else
+    call neosnippet#view#_jump(a:cur_text, a:col)
   endif
 endfunction"}}}
 
-function! s:snippets_jump_or_expand(cur_text, col) abort "{{{
+function! s:snippets_jump_or_expand(cur_text, col) "{{{
+  let cur_word = neosnippet#helpers#get_cursor_snippet(
+        \ neosnippet#helpers#get_snippets(), a:cur_text)
   if search(neosnippet#get_placeholder_marker_pattern(). '\|'
             \ .neosnippet#get_sync_placeholder_marker_pattern(), 'nw') > 0
     " Found snippet placeholder.
-    call neosnippet#view#_jump('', a:col)
+    call neosnippet#view#_jump(a:cur_text, a:col)
   else
-    return s:snippets_expand(a:cur_text, a:col)
+    call neosnippet#view#_expand(
+          \ a:cur_text, a:col, cur_word)
   endif
 endfunction"}}}
 
-function! s:SID_PREFIX() abort "{{{
+function! s:SID_PREFIX() "{{{
   return matchstr(expand('<sfile>'), '<SNR>\d\+_\ze\w\+$')
 endfunction"}}}
 
-function! neosnippet#mappings#_trigger(function) abort "{{{
-  let [cur_text, col, expr] = neosnippet#mappings#_pre_trigger()
-
-  if !neosnippet#mappings#expandable_or_jumpable()
-    return ''
-  endif
-
-  let expr .= printf("\<ESC>:call %s(%s,%d)\<CR>",
-        \ a:function, string(cur_text), col)
-
-  return expr
-endfunction"}}}
-
-function! neosnippet#mappings#_pre_trigger() abort "{{{
+function! s:trigger(function) "{{{
   call neosnippet#init#check()
 
   let cur_text = neosnippet#util#get_cur_text()
@@ -243,27 +193,24 @@ function! neosnippet#mappings#_pre_trigger() abort "{{{
     let expr .= "\<C-o>\"_d"
   endif
 
-  return [cur_text, col, expr]
+  let expr .= printf("\<ESC>:call %s(%s,%d)\<CR>",
+        \ a:function, string(cur_text), col)
+
+  return expr
 endfunction"}}}
 
 " Plugin key-mappings.
-function! neosnippet#mappings#expand_or_jump_impl() abort
-  return mode() ==# 's' ?
-        \ neosnippet#mappings#_trigger('neosnippet#view#_jump') :
-        \ neosnippet#mappings#_trigger(
-        \   s:SID_PREFIX().'snippets_expand_or_jump')
+function! neosnippet#mappings#expand_or_jump_impl()
+  return s:trigger(s:SID_PREFIX().'snippets_expand_or_jump')
 endfunction
-function! neosnippet#mappings#jump_or_expand_impl() abort
-  return mode() ==# 's' ?
-        \ neosnippet#mappings#_trigger('neosnippet#view#_jump') :
-        \ neosnippet#mappings#_trigger(
-        \   s:SID_PREFIX().'snippets_jump_or_expand')
+function! neosnippet#mappings#jump_or_expand_impl()
+  return s:trigger(s:SID_PREFIX().'snippets_jump_or_expand')
 endfunction
-function! neosnippet#mappings#expand_impl() abort
-  return neosnippet#mappings#_trigger(s:SID_PREFIX().'snippets_expand')
+function! neosnippet#mappings#expand_impl()
+  return s:trigger(s:SID_PREFIX().'snippets_expand')
 endfunction
-function! neosnippet#mappings#jump_impl() abort
-  return neosnippet#mappings#_trigger('neosnippet#view#_jump')
+function! neosnippet#mappings#jump_impl()
+  return s:trigger('neosnippet#view#_jump')
 endfunction
 
 let &cpo = s:save_cpo

@@ -33,6 +33,9 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
+" Obsolute options check. "{{{
+"}}}
+
 " Plugin key-mappings. "{{{
 inoremap <silent><expr> <Plug>(neosnippet_expand_or_jump)
       \ neosnippet#mappings#expand_or_jump_impl()
@@ -68,21 +71,19 @@ augroup neosnippet "{{{
 augroup END"}}}
 
 " Commands. "{{{
-command! -nargs=? -bar
-      \ -complete=customlist,neosnippet#commands#_edit_complete
+command! -nargs=? -complete=customlist,neosnippet#commands#_edit_complete
       \ NeoSnippetEdit
       \ call neosnippet#commands#_edit(<q-args>)
 
-command! -nargs=? -bar
-      \ -complete=customlist,neosnippet#commands#_filetype_complete
+command! -nargs=? -complete=customlist,neosnippet#commands#_filetype_complete
       \ NeoSnippetMakeCache
       \ call neosnippet#commands#_make_cache(<q-args>)
 
-command! -nargs=1 -bar -complete=file
+command! -nargs=1 -complete=file
       \ NeoSnippetSource
       \ call neosnippet#commands#_source(<q-args>)
 
-command! -bar NeoSnippetClearMarkers
+command! NeoSnippetClearMarkers
       \ call neosnippet#commands#_clear_markers()
 "}}}
 

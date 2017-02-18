@@ -52,7 +52,7 @@ syntax match   neosnippetEscape
       \ '\\[`]' contained
 
 syntax match   neosnippetKeyword
-      \ '^\%(include\|source\|snippet\|abbr\|prev_word\|delete\|alias\|options\|regexp\|TARGET\)' contained
+      \ '^\%(include\|snippet\|abbr\|prev_word\|delete\|alias\|options\|regexp\|TARGET\)' contained
 syntax keyword   neosnippetOption
       \ head word indent contained
 syntax match   neosnippetPrevWords
@@ -74,10 +74,6 @@ syntax match   neosnippetRank
 syntax match   neosnippetStatementInclude
       \ '^include\s.*$' contains=neosnippetInclude,neosnippetKeyword
 syntax match   neosnippetInclude
-      \ '\s\+.*$' contained
-syntax match   neosnippetStatementSource
-      \ '^source\s.*$' contains=neosnippetSource,neosnippetKeyword
-syntax match   neosnippetSource
       \ '\s\+.*$' contained
 syntax match   neosnippetStatementDelete
       \ '^delete\s.*$' contains=neosnippetDelete,neosnippetKeyword
@@ -103,7 +99,6 @@ highlight def link neosnippetPlaceHolderComment Comment
 highlight def link neosnippetVariable Special
 highlight def link neosnippetComment Comment
 highlight def link neosnippetInclude PreProc
-highlight def link neosnippetSource PreProc
 highlight def link neosnippetDelete PreProc
 highlight def link neosnippetOption PreProc
 highlight def link neosnippetAlias Identifier
