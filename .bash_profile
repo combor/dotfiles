@@ -43,10 +43,7 @@ eval "$(fasd --init auto)"
 function git_diff() {
   git diff --no-ext-diff -w "$@" | vim -R –
 }
-
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
+#rbenv
+eval "$(rbenv init -)"
 #Enable virtualenv
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
