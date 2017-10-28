@@ -1,6 +1,7 @@
 [user]
 	name = Piotr Komborski
 	email = piotr.komborski@gmail.com
+	signingkey = 528DB7841E58E82DF599DDE866A31A11D9693D9D
 [push]
   default = simple
 [alias]
@@ -13,3 +14,5 @@
         status = auto
 [commit]
 	gpgsign = true
+[rebase]
+	autosquash = true

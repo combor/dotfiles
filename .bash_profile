@@ -1,16 +1,17 @@
-alias tmux="TERM=screen-256color-bce tmux"
 export VISUAL=vim
 export GOPATH=/go
 export PATH=$PATH:/usr/local/opt/go/libexec/bin:$GOPATH/bin
 stty -ixon
 
+export GPG_TTY=$(tty)
+
 for i in ~/.*-pass; do
     [ -e "${i}"/.load.bash ] && . "${i}"/.load.bash
 done
 
-for i in /usr/local/etc/bash_completion.d/*; do 
-    . "${i}"
-done
+if [ -f /usr/local/share/bash-completion/bash_completion ]; then
+. /usr/local/share/bash-completion/bash_completion
+fi
 
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWSTASHSTATE=true
@@ -34,8 +35,6 @@ UNDERLINE=$(tput smul)
 
 PS1="\[$GREEN\]\t-\[$YELLOW\]pk@\H\[$NORMAL\]\w\[\033[m\]\[$MAGENTA\]\$(__git_ps1)\[$NORMAL\]\$ "
 
-GPG_AGENT=$(which gpg-agent)
-
 eval "$(thefuck --alias)"
 
 eval "$(fasd --init auto)"
@@ -43,7 +42,9 @@ eval "$(fasd --init auto)"
 function git_diff() {
   git diff --no-ext-diff -w "$@" | vim -R –
 }
+
 #rbenv
 eval "$(rbenv init -)"
+
 #Enable virtualenv
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi

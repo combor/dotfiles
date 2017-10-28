@@ -1,0 +1,7 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/go/src/github.com/alphagov/paas-cdn-broker/.git'
+let g:netrw_dirhist_2='/go/src/github.com/alphagov/paas-cf/terraform/cloudfront'
+let g:netrw_dirhist_3='/Users/piotrkomborski/.gnupg'
+let g:netrw_dirhist_4='/go/src/github.com/combor/uswitch'
+let g:netrw_dirhist_5='/go/src/github.com/alphagov/paas-cf/manifests/cf-manifest/manifest'
