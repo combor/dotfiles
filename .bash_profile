@@ -1,17 +1,12 @@
 export VISUAL=vim
-export GOPATH=/go
-export PATH=$PATH:/usr/local/opt/go/libexec/bin:$GOPATH/bin
+export GOPATH=~/dev
+export PATH=/usr/local/opt/gnu-getopt/bin:$PATH:/usr/local/opt/go/libexec/bin:$GOPATH/bin:/usr/local/sbin
 stty -ixon
 
 export GPG_TTY=$(tty)
 
-for i in ~/.*-pass; do
-    [ -e "${i}"/.load.bash ] && . "${i}"/.load.bash
-done
-
-if [ -f /usr/local/share/bash-completion/bash_completion ]; then
-. /usr/local/share/bash-completion/bash_completion
-fi
+export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWSTASHSTATE=true
@@ -46,5 +41,8 @@ function git_diff() {
 #rbenv
 eval "$(rbenv init -)"
 
-#Enable virtualenv
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+#pyenv
+eval "$(pyenv init -)"
+
+export GO111MODULE=on
+export HOMEBREW_AUTO_UPDATE_SECS="86400"
