@@ -1,9 +1,8 @@
 [user]
 	name = Piotr Komborski
 	email = piotr.komborski@gmail.com
-	signingkey = 528DB7841E58E82DF599DDE866A31A11D9693D9D
 [push]
-  default = simple
+        default = simple
 [alias]
         lol = log --graph --decorate --pretty=oneline --abbrev-commit
         lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
@@ -12,7 +11,5 @@
         diff = auto
         interactive = auto
         status = auto
-[commit]
-	gpgsign = true
 [rebase]
 	autosquash = true
