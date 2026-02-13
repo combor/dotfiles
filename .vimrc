@@ -1,23 +1,20 @@
 set encoding=utf8
-set completeopt=noinsert,menuone,noselect
 set hidden
 set autoindent
 set number
 set title
 set wildmenu
-set guifont=hack_nerd_font:h15
-syntax on
-set ttyfast
-filetype plugin indent on
 set autowrite
-autocmd Vimenter * nnoremap <C-e> <C-w>
-autocmd FileType gitcommit setlocal spell
-set nocompatible
-filetype off
+syntax on
 filetype plugin indent on
+
+nnoremap <C-e> <C-w>
+autocmd FileType gitcommit setlocal spell
+
 " Start NERDTree and put the cursor back in the other window.
 autocmd VimEnter * NERDTree | wincmd p
 autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
 if executable('terraform-ls')
     au User lsp_setup call lsp#register_server({
         \ 'name': 'terraform-ls',
@@ -40,10 +37,12 @@ if executable('gopls')
         \ },
         \ })
 endif
+
 autocmd BufWritePre *.tf,*.tfvars call execute('LspDocumentFormatSync')
 autocmd BufWritePre *.go
     \ call execute('LspDocumentFormatSync') |
     \ call execute('LspCodeActionSync source.organizeImports')
+
 nmap gd <plug>(lsp-definition)
 nmap gr <plug>(lsp-references)
 nmap K <plug>(lsp-hover)
@@ -58,12 +57,10 @@ nmap gS <plug>(lsp-workspace-symbol-search)
 nmap <leader>pd <plug>(lsp-peek-definition)
 nmap <leader>dl <plug>(lsp-document-diagnostics)
 nmap <leader>cl <plug>(lsp-code-lens)
+
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 imap <c-space> <Plug>(asyncomplete_force_refresh)
-" allow modifying the completeopt variable, or it will
-" be overridden all the time
 let g:asyncomplete_auto_completeopt = 0
-
 set completeopt=menuone,noinsert,noselect,preview
