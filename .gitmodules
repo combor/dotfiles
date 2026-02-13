@@ -1,0 +1,15 @@
+[submodule ".vim/pack/vendor/start/async.vim"]
+	path = .vim/pack/vendor/start/async.vim
+	url = https://github.com/prabirshrestha/async.vim
+[submodule ".vim/pack/vendor/start/asyncomplete-lsp.vim"]
+	path = .vim/pack/vendor/start/asyncomplete-lsp.vim
+	url = https://github.com/prabirshrestha/asyncomplete-lsp.vim
+[submodule ".vim/pack/vendor/start/asyncomplete.vim"]
+	path = .vim/pack/vendor/start/asyncomplete.vim
+	url = https://github.com/prabirshrestha/asyncomplete.vim
+[submodule ".vim/pack/vendor/start/nerdtree"]
+	path = .vim/pack/vendor/start/nerdtree
+	url = https://github.com/preservim/nerdtree.git
+[submodule ".vim/pack/vendor/start/vim-lsp"]
+	path = .vim/pack/vendor/start/vim-lsp
+	url = https://github.com/prabirshrestha/vim-lsp
