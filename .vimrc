@@ -37,6 +37,13 @@ if executable('gopls')
         \ },
         \ })
 endif
+if executable('ty')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'ty',
+        \ 'cmd': {server_info->['ty', 'server']},
+        \ 'allowlist': ['python'],
+        \ })
+endif
 
 autocmd BufWritePre *.tf,*.tfvars call execute('LspDocumentFormatSync')
 autocmd BufWritePre *.go
