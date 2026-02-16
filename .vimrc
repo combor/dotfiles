@@ -44,6 +44,13 @@ if executable('ty')
         \ 'allowlist': ['python'],
         \ })
 endif
+if executable('yaml-language-server')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'yaml-language-server',
+        \ 'cmd': {server_info->['yaml-language-server', '--stdio']},
+        \ 'allowlist': ['yaml'],
+        \ })
+endif
 
 autocmd BufWritePre *.tf,*.tfvars call execute('LspDocumentFormatSync')
 autocmd BufWritePre *.go
