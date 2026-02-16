@@ -1,4 +1,11 @@
 export VISUAL=vim
+export EDITOR=vim
+export GIT_EDITOR=vim
+export CHECKPOINT_DISABLE="true"
+export PYTEST_ADDOPTS="--log-cli-level=INFO -s"
+git config --global rebase.autosquash true
+git config --global push.autoSetupRemote true
+
 PATH=$PATH:/opt/homebrew/bin
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
