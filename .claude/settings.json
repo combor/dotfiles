@@ -1,0 +1,11 @@
+{
+  "model": "opus",
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/piotrkomborski/.claude/statusline-command.sh"
+  }
+}

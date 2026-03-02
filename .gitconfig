@@ -2,5 +2,12 @@
 [user]
 	name = Piotr Komborski
 	email = 163394+combor@users.noreply.github.com
+	signingkey = AE27682F9B0B6675
 [push]
 	autoSetupRemote = true
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+[rebase]
+	autosquash = true
