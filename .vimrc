@@ -51,11 +51,22 @@ if executable('yaml-language-server')
         \ 'allowlist': ['yaml'],
         \ })
 endif
+if executable('dart')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'dart',
+        \ 'cmd': {server_info->['dart', 'language-server', '--client-id=vim-lsp']},
+        \ 'allowlist': ['dart'],
+        \ 'initialization_options': {
+        \   'onlyAnalyzeProjectsWithOpenFiles': v:true,
+        \ },
+        \ })
+endif
 
 autocmd BufWritePre *.tf,*.tfvars call execute('LspDocumentFormatSync')
 autocmd BufWritePre *.go
     \ call execute('LspDocumentFormatSync') |
     \ call execute('LspCodeActionSync source.organizeImports')
+autocmd BufWritePre *.dart call execute('LspDocumentFormatSync')
 
 nmap gd <plug>(lsp-definition)
 nmap gr <plug>(lsp-references)

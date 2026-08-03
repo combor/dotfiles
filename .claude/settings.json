@@ -1,11 +1,56 @@
 {
-  "model": "opus",
-  "enabledPlugins": {
-    "gopls-lsp@claude-plugins-official": true
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebSearch",
+      "Bash(grep:*)",
+      "Bash(curl:*)",
+      "Bash(go mod:*)",
+      "Bash(go build:*)",
+      "WebFetch(domain:ona.com)",
+      "Bash(ls:*)",
+      "Bash(go test:*)",
+      "Bash(gh run:*)",
+      "Bash(gofmt:*)",
+      "Bash(act push:*)",
+      "WebFetch(domain:registry.terraform.io)",
+      "WebFetch(domain:developer.hashicorp.com)",
+      "Bash(go env:*)",
+      "Bash(go list:*)",
+      "Bash(GOPROXY=https://proxy.golang.org go list:*)",
+      "WebFetch(domain:www.gitpod.io)",
+      "Bash(go doc:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh api:*)",
+      "Bash(gh release:*)",
+      "Bash(go get:*)",
+      "Bash(find /Users/piotrkomborski/src/github.com/combor/terraform-provider-ona/examples -type f -name *.tf)",
+      "Bash(find /Users/piotrkomborski/src/github.com/combor/terraform-provider-ona -path */gitpod-sdk-go -type d)"
+    ],
+    "defaultMode": "default"
   },
-  "effortLevel": "high",
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "bash /Users/piotrkomborski/.claude/statusline-command.sh"
-  }
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "mcp-server-dev@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "addy-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "addyosmani/agent-skills"
+      }
+    }
+  },
+  "effortLevel": "xhigh",
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
+  "switchModelsOnFlag": false
 }
