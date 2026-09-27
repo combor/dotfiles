@@ -1,0 +1,23 @@
+# Shared Codex preferences. Keep machine-specific settings in the local config.
+
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+plan_mode_reasoning_effort = "xhigh"
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+web_search = "live"
+
+[tui]
+animations = false
+status_line = [
+  "model-with-reasoning",
+  "git-branch",
+  "context-remaining",
+  "five-hour-limit",
+  "weekly-limit",
+]
+resume_cwd = "session"
+show_tooltips = false
+notification_condition = "always"
+alternate_screen = "never"
